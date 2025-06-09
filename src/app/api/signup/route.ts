@@ -1,62 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { findUserByEmail, createToken } from '@/helpers/auth'
+import { createToken } from '@/helpers/auth'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { email, password, name } = body
+    const { email, password, name } = await request.json()
 
-    // Validate input
+    // Simple validation
     if (!email || !password || !name) {
       return NextResponse.json(
-        { error: 'Email, password, and name are required' },
+        { error: 'All fields required' },
         { status: 400 }
       )
     }
 
-    // Check if user already exists
-    const existingUser = findUserByEmail(email)
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User already exists' },
-        { status: 409 }
-      )
-    }
-
-    // Create new user (in production, hash password and save to database)
+    // Create new user
     const newUser = {
       id: Date.now().toString(),
       email,
       name
     }
 
-    // Create token
+    // Create token and set cookie
     const token = createToken(newUser)
+    const response = NextResponse.json({ message: 'Signup successful', user: newUser })
 
-    // Create response
-    const response = NextResponse.json(
-      {
-        message: 'Signup successful',
-        user: { id: newUser.id, email: newUser.email, name: newUser.name }
-      },
-      { status: 201 }
-    )
-
-    // Set HTTP-only cookie
     response.cookies.set('auth-token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
       maxAge: 24 * 60 * 60 // 24 hours
     })
 
     return response
-
   } catch (error) {
-    console.error('Signup error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Signup failed' }, { status: 500 })
   }
 }
