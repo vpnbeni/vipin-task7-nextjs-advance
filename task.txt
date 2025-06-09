@@ -1,0 +1,10 @@
+Implement advanced Next.js features for a production application. 
+Requirements: 
+● Middleware for authentication 
+● Custom App and Document components 
+● API routes with middleware 
+● Image optimization with next/image 
+Technical Implementation: 
+● Create middleware for route protection 
+● Implement custom 404 and 500 pages 
+ 
