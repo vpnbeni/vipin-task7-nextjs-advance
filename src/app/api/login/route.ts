@@ -5,7 +5,6 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
 
-    // Check credentials
     const user = validateUser(email, password)
     if (!user) {
       return NextResponse.json(
@@ -14,13 +13,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create token and set cookie
     const token = createToken(user)
     const response = NextResponse.json({ message: 'Login successful', user })
 
     response.cookies.set('auth-token', token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 // 24 hours
+      maxAge: 24 * 60 * 60
     })
 
     return response

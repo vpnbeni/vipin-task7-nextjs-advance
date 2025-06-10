@@ -5,7 +5,6 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password, name } = await request.json()
 
-    // Simple validation
     if (!email || !password || !name) {
       return NextResponse.json(
         { error: 'All fields required' },
@@ -13,20 +12,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create new user
     const newUser = {
       id: Date.now().toString(),
       email,
       name
     }
 
-    // Create token and set cookie
     const token = createToken(newUser)
     const response = NextResponse.json({ message: 'Signup successful', user: newUser })
 
     response.cookies.set('auth-token', token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 // 24 hours
+      maxAge: 24 * 60 * 60
     })
 
     return response

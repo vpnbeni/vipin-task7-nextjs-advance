@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import axios from 'axios'
 
 interface User {
   id: string
@@ -20,20 +21,15 @@ export default function DashboardPage() {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch('/api/me')
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data.user)
-      } else {
-        router.push('/login')
-      }
+      const { data } = await axios.get('/api/me')
+      setUser(data.user)
     } catch {
       router.push('/login')
     }
   }
 
   const handleLogout = async () => {
-    await fetch('/api/me', { method: 'DELETE' })
+    await axios.delete('/api/me')
     router.push('/login')
   }
 
@@ -43,7 +39,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Simple Navigation */}
       <nav className="bg-white shadow p-4">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <h1 className="text-xl font-semibold">Dashboard</h1>
@@ -59,7 +54,6 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="max-w-4xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Protected Dashboard</h2>
@@ -67,7 +61,6 @@ export default function DashboardPage() {
             This page is protected by middleware. Only authenticated users can access it.
           </p>
 
-          {/* Simple Image Demo */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Image Optimization</h3>
             <Image
@@ -79,7 +72,6 @@ export default function DashboardPage() {
             />
           </div>
 
-          {/* User Info */}
           <div className="border-t pt-4">
             <h3 className="text-lg font-semibold mb-2">User Information</h3>
             <div className="space-y-1">

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import axios, { AxiosError } from 'axios'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -14,21 +15,14 @@ export default function LoginPage() {
     e.preventDefault()
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        router.push('/dashboard')
+      const { data } = await axios.post('/api/login', { email, password })
+      router.push('/dashboard')
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setError(error.response?.data?.error || 'Login failed')
       } else {
-        setError(data.error || 'Login failed')
+        setError('Login failed')
       }
-    } catch {
-      setError('Login failed')
     }
   }
 

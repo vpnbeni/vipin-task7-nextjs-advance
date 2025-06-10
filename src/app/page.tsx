@@ -13,7 +13,6 @@ export default function HomePage() {
             Simple Next.js application with basic middleware, authentication, and image optimization.
           </p>
 
-          {/* Simple Hero Image */}
           <div className="mb-8">
             <Image
               src="/hero-image.svg"
@@ -25,7 +24,6 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Simple Features */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-semibold mb-2">🔒 Basic Authentication</h3>
@@ -45,7 +43,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Simple CTA */}
           <div className="text-center">
             <div className="space-x-4">
               <Link
